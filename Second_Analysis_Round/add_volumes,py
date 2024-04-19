@@ -1,0 +1,10 @@
+import pandas as pd
+
+df = pd.read_excel('uniswap_pre_2021_2.xlsx')
+
+df['volume_bought'] = df.apply(lambda row: row['Amount (Out)'] if row['Action'] in ['Swap', 'Buy'] else row['Amount (In)'], axis=1)
+df['volume_sold'] = df.apply(lambda row: row['Amount (Out)'] if row['volume_bought'] == row['Amount (In)'] else row['Amount (In)'], axis=1)
+df['token_bought'] = df.apply(lambda row: row['Token (In)'] if row['Action'] in ['Swap', 'Buy'] else row['Token (Out)'], axis=1)
+df['token_sold'] = df.apply(lambda row: row['Token (Out)'] if row['token_bought'] == row['Token (In)'] else row['Token (In)'], axis=1)
+
+df.to_csv('uniswap_3.csv', index=False)
